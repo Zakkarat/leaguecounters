@@ -2,8 +2,6 @@ import React from "react";
 import {
   MDBCard,
   MDBCardTitle,
-  MDBBtn,
-  MDBCardGroup,
   MDBCardImage,
   MDBCardText,
   MDBCardBody
@@ -11,14 +9,12 @@ import {
 
 const MovieItem = props => {
   return (
-    <MDBCard>
-      <MDBCardImage cascade style={{ height: '25rem' }} src={props.poster} top hover></MDBCardImage>
+    <MDBCard style={{ width: "16rem" }}>
+      <MDBCardImage style={{ height: '28rem', transform: 'scale(1.08)' }} src={props.poster} top hover waves={false}></MDBCardImage>
       <MDBCardBody className="stylish-color text-white">
-        <MDBCardTitle tag="h5">{props.name}</MDBCardTitle>
-        <MDBCardText className="secondary-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </MDBCardText>
+        <MDBCardTitle tag="h5" className="mb-0 text-center"><strong>{props.name}</strong></MDBCardTitle>
+        <p className='font-weight-bold secondary-text text-center mb-0'>{props.title}</p>
+        <MDBCardText className="mt-1 text-center">Roles: {props.desc.join(', ')}</MDBCardText>
       </MDBCardBody>
     </MDBCard>
   );

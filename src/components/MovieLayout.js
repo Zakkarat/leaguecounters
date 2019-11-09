@@ -2,42 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MovieItem from "./MovieItem";
 import {
-  MDBCardGroup,
   MDBCol,
   MDBRow,
-  MDBPagination,
-  MDBPageNav,
-  MDBPageItem
 } from "mdbreact";
-//const top_rated = `https://api.themoviedb.org/3/movie/top_rated?api_key=6326e1c1e6c5ba7ae501aec76981e034&language=en-US&page=1`
-const lol = `http://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json`;
-//const childish = `https://api.themoviedb.org/3/discover/movie?api_key=6326e1c1e6c5ba7ae501aec76981e034&certification_country=US&certification.lte=G&sort_by=popularity.desc&page=1`
-const MovieLayout = () => {
-  const [movieList, setMovieList] = useState([]);
-  const [page, setPage] = useState(1);
-  const pagesRange = Array(5).reduce((acc, elem, i) => {
-    if(i === 0) {
-        acc.push(page);
-        return acc;
-    }
-    acc.push(page + i);
-    return acc;
-  },[])
-  console.log(pagesRange);
+import {connect} from 'react-redux';
+const MovieLayout = ({language}) => {
+  console.log(`Main menu ${language}`)
+  const [championList, setChampionList] = useState([]);
   useEffect(() => {
     const fetchData = async () =>
       await axios(
-        lol
+        `http://ddragon.leagueoflegends.com/cdn/9.22.1/data/${language}/champion.json`
       )
-        .then(res => {
-          console.log(res);
-          setMovieList(
-            res.data.results.reduce((row, elem, i) => {
-              if (i % 5 === 0) {
-                row.push([elem]);
+        .then(({data}) => {
+          data = data.data;
+          setChampionList(
+              Object.keys(data).reduce((row, elem, i) => {
+              if (i % 6 === 0) {
+                row.push([data[elem]]);
                 return row;
               } else {
-                row[row.length - 1].push(elem);
+                row[row.length - 1].push(data[elem]);
                 return row;
               }
             }, [])
@@ -47,24 +32,33 @@ const MovieLayout = () => {
           console.log(err);
         });
     fetchData();
-  }, []);
+  }, [language]);
+  console.log(championList)
   return (
     <>
-      {movieList
-        ? movieList.map((group, index) => (
-            <MDBCardGroup deck className="mt-4 mb-4" key={index}>
-              {group.map((card, i) => (
+      {championList
+        ? championList.map((group, index) => (
+            <MDBRow key={index} className="">
+              {group.map((card) => (
+                <MDBCol className="mt-4 mb-4 mx-auto" xs='1'>
                 <MovieItem
-                  key={i}
-                  name={card.original_title}
-                  poster={`https://image.tmdb.org/t/p/w300${card.poster_path}`}
+                  key={card.key}
+                  name={card.name}
+                  title={card.title}
+                  desc={card.tags}
+                  poster={`http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${card.id}_0.jpg`}
                 ></MovieItem>
+                </MDBCol>
               ))}
-            </MDBCardGroup>
+              </MDBRow>
           ))
         : null}
     </>
   );
 };
 
-export default MovieLayout;
+const mapStateToProps = ({language}) => ({
+  language
+});
+
+export default connect(mapStateToProps)(MovieLayout);

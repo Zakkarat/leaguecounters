@@ -46,6 +46,7 @@ const MovieLayout = ({language}) => {
                   name={card.name}
                   title={card.title}
                   desc={card.tags}
+                  language={language}
                   poster={`http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${card.id}_0.jpg`}
                 ></MovieItem>
                 </MDBCol>

@@ -9,7 +9,6 @@ import {
 } from "mdbreact";
 import { makeStyles } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -17,7 +16,10 @@ import { changeLang } from "../Redux/actions";
 import { connect } from "react-redux";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-import { borderRadius } from "@material-ui/system";
+import Paper from "@material-ui/core/Paper";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles(theme => ({
   formControlLang: {
@@ -26,19 +28,38 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#2f3c42",
     borderRadius: "4px"
   },
-
+  formControlSort: {
+    margin: theme.spacing(1),
+    minWidth: 90
+  },
   formControlRole: {
     margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300,
-    
-    
+    minWidth: 90,
+    maxWidth: 285
   },
   selectBackground: {
     backgroundColor: "#2f3c42",
     color: "white",
     paddingLeft: "5px",
-    borderRadius: "3px",
+    borderRadius: "3px"
+  },
+  root: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "#2f3c42",
+    width: 285
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+    color: "white"
+  },
+  iconButton: {
+    padding: 10
+  },
+  menuToCenter: {
+    alignItems: "center"
   }
 }));
 const ITEM_HEIGHT = 48;
@@ -53,11 +74,12 @@ const MenuProps = {
 };
 
 const roles = ["Tank", "Mage", "Assassin", "Support", "Fighter", "Marksman"];
-
+const sortOptions = ["ASC ↑", "DESC ↓"];
 const Navbar = ({ language, changeLang }) => {
   const classes = useStyles();
   const [lang, setLang] = useState(language);
   const [role, setRole] = useState([]);
+  const [sort, setSort] = useState("");
   const [isOpen, setIsOpen] = useState("false");
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
@@ -70,6 +92,10 @@ const Navbar = ({ language, changeLang }) => {
     setRole(event.target.value);
   };
 
+  const handleChangeSort = event => {
+    setSort(event.target.value);
+  };
+
   console.log(language);
   return (
     <>
@@ -77,7 +103,8 @@ const Navbar = ({ language, changeLang }) => {
         <MDBNavbarBrand>
           <strong className="white-text">OTP counter</strong>
         </MDBNavbarBrand>
-        <MDBNavbarNav>
+        <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
+        <MDBNavbarNav className={classes.menuToCenter} center>
           <FormControl className={classes.formControlRole}>
             <Select
               multiple
@@ -88,15 +115,15 @@ const Navbar = ({ language, changeLang }) => {
               input={<Input />}
               renderValue={selected => {
                 if (selected.length === 0) {
-                  return <em>Roles</em>;
+                  return 'Roles';
                 }
-    
-                return selected.join(', ');
+
+                return selected.join(", ");
               }}
               MenuProps={MenuProps}
             >
               <MenuItem disabled value="">
-                <em>Roles</em>
+                Roles
               </MenuItem>
               {roles.map(name => (
                 <MenuItem key={name} value={name}>
@@ -106,8 +133,48 @@ const Navbar = ({ language, changeLang }) => {
               ))}
             </Select>
           </FormControl>
+          <Paper component="form" className={classes.root}>
+            <IconButton
+              className={classes.iconButton}
+              aria-label="menu"
+            ></IconButton>
+            <InputBase
+              className={classes.input}
+              placeholder="Search"
+              inputProps={{ "aria-label": "search google maps" }}
+            />
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+            >
+              <SearchIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              className={classes.iconButton}
+              aria-label="directions"
+            ></IconButton>
+          </Paper>
+          <FormControl className={classes.formControlSort}>
+            <Select
+              displayEmpty
+              className={classes.selectBackground}
+              value={sort}
+              onChange={handleChangeSort}
+            >
+              <MenuItem disabled value="">
+                Sort
+              </MenuItem>
+              {sortOptions.map(name => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </MDBNavbarNav>
-        <MDBNavbarNav right>
+        <MDBNavbarNav className={classes.menuToCenter} right>
           <MDBNavItem>
             <FormControl variant="outlined" className={classes.formControlLang}>
               <Select
@@ -121,8 +188,8 @@ const Navbar = ({ language, changeLang }) => {
             </FormControl>
           </MDBNavItem>
         </MDBNavbarNav>
+        </MDBCollapse>
         <MDBNavbarToggler onClick={toggleCollapse} />
-        <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar></MDBCollapse>
       </MDBNavbar>
     </>
   );

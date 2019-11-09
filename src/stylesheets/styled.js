@@ -11,4 +11,7 @@ export const AppStyles = styled.div`
     .color-apply {
         background-color:  #37474F;
     }
+    .color-to-card {
+        background-color: #252f33;
+    }
 `

@@ -12,7 +12,7 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { changeLang } from "../Redux/actions";
+import { changeLang, rolesFiltering, sorting, search } from "../Redux/actions";
 import { connect } from "react-redux";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -75,7 +75,8 @@ const MenuProps = {
 
 const roles = ["Tank", "Mage", "Assassin", "Support", "Fighter", "Marksman"];
 const sortOptions = ["ASC ↑", "DESC ↓"];
-const Navbar = ({ language, changeLang }) => {
+const Navbar = ({ urlReducer, changeLang, rolesFiltering, sorting, search }) => {
+  const {language} = urlReducer;
   const classes = useStyles();
   const [lang, setLang] = useState(language);
   const [role, setRole] = useState([]);
@@ -88,12 +89,14 @@ const Navbar = ({ language, changeLang }) => {
     setLang(target.value);
     changeLang(target.value);
   };
-  const handleChangeRole = event => {
-    setRole(event.target.value);
+  const handleChangeRole = ({ target }) => {
+    setRole(target.value);
+    rolesFiltering(target.value)
   };
 
-  const handleChangeSort = event => {
-    setSort(event.target.value);
+  const handleChangeSort = ({ target }) => {
+    setSort(target.value);
+    sorting(target.value)
   };
 
   console.log(language);
@@ -195,12 +198,12 @@ const Navbar = ({ language, changeLang }) => {
   );
 };
 
-const mapStateToProps = ({ language }) => ({
-  language
+const mapStateToProps = ({ urlReducer }) => ({
+  urlReducer
 });
 
 const mapDispatchToProps = {
-  changeLang
+  changeLang, rolesFiltering, sorting, search
 };
 
 export default connect(

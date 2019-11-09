@@ -6,8 +6,10 @@ import {
   MDBRow,
 } from "mdbreact";
 import {connect} from 'react-redux';
-const MovieLayout = ({language}) => {
-  console.log(`Main menu ${language}`)
+const MovieLayout = ({urlReducer,filters}) => {
+  console.log(filters)
+  const {language} = urlReducer;
+  const {sort, searchWord, roles} = filters;
   const [championList, setChampionList] = useState([]);
   useEffect(() => {
     const fetchData = async () =>
@@ -16,33 +18,30 @@ const MovieLayout = ({language}) => {
       )
         .then(({data}) => {
           data = data.data;
-          setChampionList(
-              Object.keys(data).reduce((row, elem, i) => {
-              if (i % 6 === 0) {
-                row.push([data[elem]]);
+          const champs = Object.keys(data).reduce((row, elem, i) => {
+                row.push(data[elem]);
                 return row;
-              } else {
-                row[row.length - 1].push(data[elem]);
-                return row;
-              }
             }, [])
-          );
+            if(sort === "ASC ↑") {
+              setChampionList(champs.reverse())
+            } else {
+              setChampionList(champs)
+            }
         })
         .catch(err => {
           console.log(err);
         });
     fetchData();
-  }, [language]);
+    console.log(sort === "ASC ↑")
+
+  }, [language, sort]);
   console.log(championList)
   return (
-    <>
-      {championList
-        ? championList.map((group, index) => (
-            <MDBRow key={index} className="">
-              {group.map((card) => (
-                <MDBCol className="mt-4 mb-4 mx-auto" xs='1'>
+    <MDBRow >
+      {championList ?
+        championList.map(card => (
+                <MDBCol key={card.key} className="mt-4 mb-4 mx-auto d-flex justify-content-center">
                 <MovieItem
-                  key={card.key}
                   name={card.name}
                   title={card.title}
                   desc={card.tags}
@@ -50,16 +49,15 @@ const MovieLayout = ({language}) => {
                   poster={`http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${card.id}_0.jpg`}
                 ></MovieItem>
                 </MDBCol>
-              ))}
-              </MDBRow>
-          ))
+              ))
         : null}
-    </>
+    </MDBRow>
   );
 };
 
-const mapStateToProps = ({language}) => ({
-  language
+const mapStateToProps = ({urlReducer, filters}) => ({
+  urlReducer,
+  filters
 });
 
 export default connect(mapStateToProps)(MovieLayout);

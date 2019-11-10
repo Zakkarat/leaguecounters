@@ -75,16 +75,21 @@ const MenuProps = {
 
 const roles = ["Tank", "Mage", "Assassin", "Support", "Fighter", "Marksman"];
 const sortOptions = ["ASC ↑", "DESC ↓"];
-const Navbar = ({ urlReducer, changeLang, rolesFiltering, sorting, search }) => {
+const Navbar = ({ urlReducer, filters, changeLang, rolesFiltering, sorting, search }) => {
   const {language} = urlReducer;
   const classes = useStyles();
   const [lang, setLang] = useState(language);
-  const [role, setRole] = useState([]);
-  const [sort, setSort] = useState("");
+  const [role, setRole] = useState(filters.roles);
+  const [sort, setSort] = useState(filters.sort);
+  const [searchWord, setSerchword] = useState(filters.searchWord);
   const [isOpen, setIsOpen] = useState("false");
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
   };
+  const handleChangeSearch = ({target}) => {
+    setSerchword(target.value)
+    search(target.value)
+  }
   const handleChange = ({ target }) => {
     setLang(target.value);
     changeLang(target.value);
@@ -107,7 +112,7 @@ const Navbar = ({ urlReducer, changeLang, rolesFiltering, sorting, search }) => 
           <strong className="white-text">OTP counter</strong>
         </MDBNavbarBrand>
         <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
-        <MDBNavbarNav className={classes.menuToCenter} center>
+        <MDBNavbarNav className={classes.menuToCenter}>
           <FormControl className={classes.formControlRole}>
             <Select
               multiple
@@ -144,20 +149,16 @@ const Navbar = ({ urlReducer, changeLang, rolesFiltering, sorting, search }) => 
             <InputBase
               className={classes.input}
               placeholder="Search"
+              value={searchWord}
+              onChange={handleChangeSearch}
               inputProps={{ "aria-label": "search google maps" }}
             />
             <IconButton
-              type="submit"
               className={classes.iconButton}
               aria-label="search"
             >
               <SearchIcon />
             </IconButton>
-            <IconButton
-              color="primary"
-              className={classes.iconButton}
-              aria-label="directions"
-            ></IconButton>
           </Paper>
           <FormControl className={classes.formControlSort}>
             <Select
@@ -198,8 +199,8 @@ const Navbar = ({ urlReducer, changeLang, rolesFiltering, sorting, search }) => 
   );
 };
 
-const mapStateToProps = ({ urlReducer }) => ({
-  urlReducer
+const mapStateToProps = ({ urlReducer, filters }) => ({
+  urlReducer, filters
 });
 
 const mapDispatchToProps = {

@@ -18,28 +18,36 @@ const MovieLayout = ({urlReducer,filters}) => {
       )
         .then(({data}) => {
           data = data.data;
-          const champs = Object.keys(data).reduce((row, elem, i) => {
+          let champs = Object.keys(data).reduce((row, elem, i) => {
                 row.push(data[elem]);
                 return row;
             }, [])
-            if(sort === "ASC ↑") {
-              setChampionList(champs.reverse())
-            } else {
-              setChampionList(champs)
-            }
+            if(sort === "DESC ↓") {
+              champs.reverse()
+            }             
+            setChampionList(champs)
         })
         .catch(err => {
           console.log(err);
         });
-    fetchData();
-    console.log(sort === "ASC ↑")
-
-  }, [language, sort]);
-  console.log(championList)
+      fetchData();
+  }, [language, sort, roles, searchWord]);
+  const filterCheck = () => {
+    let data = championList;       
+    if(roles.length !== 0) {
+      data = data.filter(elem => elem.tags.every(role =>(roles.indexOf(role) + 1)))
+    }
+    if(searchWord) {
+      data = data.filter(elem => {
+        return elem.name.match(new RegExp(searchWord, "ig"))
+      });
+    }
+    return data;
+  }
   return (
     <MDBRow >
       {championList ?
-        championList.map(card => (
+        filterCheck(championList).map(card => (
                 <MDBCol key={card.key} className="mt-4 mb-4 mx-auto d-flex justify-content-center">
                 <MovieItem
                   name={card.name}

@@ -24,14 +24,11 @@ const urlReducer = (state = intialState, action) => {
 const filters = (state = filterState, action) => {
   switch (action.type) {
     case SORTING:
-      state.sort = action.payload;
-      return state;
+      return {...state, sort: action.payload};
     case SEARCH:
-      state.searchWord = action.payload;
-      return state;
+      return {...state, searchWord: action.payload};
     case ROLES_FILTERING:
-      state.sort = [...action.payload];
-      return state;
+      return {...state, roles: [...action.payload]};
     default:
       return state;
   }

@@ -2,6 +2,7 @@ export const CHANGE_LANG = "CHANGE_LANG"
 export const ROLES_FILTERING = "ROLES_FILTERING"
 export const SORTING = "SORTING"
 export const SEARCH = "SEARCH"
+export const VOTING = "VOTING"
 
 export const changeLang = (language) => ({
     type: CHANGE_LANG,
@@ -21,4 +22,8 @@ export const sorting = (sortType) => ({
 export const search = (searchWord) => ({
     type: SEARCH,
     payload: searchWord
+})
+export const voting = (votes) => ({
+    type: VOTING,
+    payload: votes
 })

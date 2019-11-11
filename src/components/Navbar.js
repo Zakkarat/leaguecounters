@@ -5,7 +5,8 @@ import {
   MDBNavItem,
   MDBNavbarToggler,
   MDBCollapse,
-  MDBNavbarNav
+  MDBNavbarNav,
+  MDBCol
 } from "mdbreact";
 import { makeStyles } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
@@ -59,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     padding: 10
   },
   menuToCenter: {
-    alignItems: "center"
+    alignItems: "center",
   }
 }));
 const ITEM_HEIGHT = 48;
@@ -75,7 +76,7 @@ const MenuProps = {
 
 const roles = ["Tank", "Mage", "Assassin", "Support", "Fighter", "Marksman"];
 const sortOptions = ["ASC ↑", "DESC ↓"];
-const Navbar = ({ urlReducer, filters, changeLang, rolesFiltering, sorting, search }) => {
+const Navbar = ({ urlReducer, filters, votes, changeLang, rolesFiltering, sorting, search }) => {
   const {language} = urlReducer;
   const classes = useStyles();
   const [lang, setLang] = useState(language);
@@ -109,7 +110,7 @@ const Navbar = ({ urlReducer, filters, changeLang, rolesFiltering, sorting, sear
     <>
       <MDBNavbar color="special-color-dark" dark expand="md">
         <MDBNavbarBrand>
-          <strong className="white-text">OTP counter</strong>
+  <strong className="white-text">Current votes: {votes}</strong>
         </MDBNavbarBrand>
         <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
         <MDBNavbarNav className={classes.menuToCenter}>
@@ -199,8 +200,8 @@ const Navbar = ({ urlReducer, filters, changeLang, rolesFiltering, sorting, sear
   );
 };
 
-const mapStateToProps = ({ urlReducer, filters }) => ({
-  urlReducer, filters
+const mapStateToProps = ({ urlReducer, filters, votes }) => ({
+  urlReducer, filters, votes
 });
 
 const mapDispatchToProps = {

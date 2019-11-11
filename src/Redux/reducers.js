@@ -1,9 +1,11 @@
-import { CHANGE_LANG, SORTING, SEARCH, ROLES_FILTERING } from "./actions";
+import { CHANGE_LANG, SORTING, SEARCH, ROLES_FILTERING, VOTING } from "./actions";
 import { combineReducers } from "redux";
 
 const intialState = {
   language: "en_US"
 };
+
+const intialVotes = 3;
 
 const filterState = {
   searchWord: "",
@@ -34,4 +36,14 @@ const filters = (state = filterState, action) => {
   }
 };
 
-export default combineReducers({ urlReducer, filters });
+const votes = (state = intialVotes, action) => {
+  switch (action.type) {
+    case VOTING:
+      state = action.payload;
+      return state;
+      default: 
+      return state;
+  }
+}
+
+export default combineReducers({ urlReducer, filters, votes });

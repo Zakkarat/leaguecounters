@@ -13,5 +13,9 @@ export const AppStyles = styled.div`
     }
     .color-to-card {
         background-color: #252f33;
+        display: grid;
+    }
+    .normalize-card {
+        background-color: #252f33;
     }
 `

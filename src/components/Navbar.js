@@ -6,7 +6,6 @@ import {
   MDBNavbarToggler,
   MDBCollapse,
   MDBNavbarNav,
-  MDBCol
 } from "mdbreact";
 import { makeStyles } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";

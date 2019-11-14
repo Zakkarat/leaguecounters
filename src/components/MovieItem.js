@@ -15,8 +15,8 @@ const MovieItem = props => {
   const {cookies} = props;
   const [counter, setCounter] = useState(props.counter ? props.counter : 0);
   const sendCookies = async(votes) => {
-    await axios.post("http://localhost:9000/cookies", {
-      token: 'kek',
+    await axios.post("/cookies", {
+      token: cookies.get('token'),
       votes
     }).then(res => console.log(res));
   }
@@ -29,7 +29,7 @@ const MovieItem = props => {
       }
       sendCookies(props.votes - 1)
       axios
-        .post("http://localhost:9000/counters", {
+        .post("/counters", {
           id: props.id,
           Count: counter
         })
@@ -38,7 +38,7 @@ const MovieItem = props => {
 
   };
   return (
-    <MDBCard style={{ width: "16rem" }}>
+    <MDBCard className="normalize-card" style={{ width: "16rem" }}>
       <MDBCardImage
         style={{ height: "28rem", transform: "scale(1.08)" }}
         src={props.poster}
@@ -46,7 +46,7 @@ const MovieItem = props => {
         hover
         waves={false}
       ></MDBCardImage>
-      <MDBCardBody className="color-to-card text-white">
+      <MDBCardBody className="color-to-card text-white justify-content-center">
         <MDBCardTitle tag="h5" className="mb-0 text-center">
           <strong>{props.name}</strong>
         </MDBCardTitle>
@@ -54,14 +54,14 @@ const MovieItem = props => {
           {props.title}
         </p>
         <MDBCardText className="mt-1 text-center">
-          {props.language === "en_US" ? "Roles" : "Роли"}:{" "}
+          {props.language === "en_US" ? "Roles" : "Роли"} : {" "}
           {props.desc.join(", ")}
         </MDBCardText>
-        <MDBBtn className="ml-5" onClick={handleClick}>
-          Heh
+        <MDBBtn rounded color="secondary" className="" onClick={handleClick}>
+          {props.language === "en_US" ? "Vote" : "Проголосовать"}
         </MDBBtn>
         <p className="font-weight-bold secondary-text text-center mb-0">
-          Votes for champion: {counter}
+  {props.language === "en_US" ? "Votes for champion" : "Отдано голосов"} : {" "} {counter}
         </p>
       </MDBCardBody>
     </MDBCard>

@@ -10,18 +10,21 @@ import axios from "axios";
 
 const App = ({cookies}) => {
   const [gotData, setGotData] = useState(cookies.get('token'));
-  const [votes, setVotes] = useState(0);
+  const [votes, setVotes] = useState();
   useEffect(() => {
     const fetchByCookies = async() => {
-      await axios.get("http://localhost:9000/cookies", {
+      await axios.get("/cookies", {
+        params: {
         token: cookies.get('token')
-      }).then(res => {
+        }
+      }).then(({data}) => {
+        console.log(data);
         setGotData(false);
-        setVotes(res[0].votes);
+        setVotes(data[0].votes);
       })
     }
     if(gotData) {
-      fetchByCookies()
+     fetchByCookies()
     }
   })
   return (

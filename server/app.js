@@ -13,8 +13,8 @@ const testAPIRouter = require("./routes/testAPI");
 var app = express();
 app.use(cors())
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//app.set('views', path.join(__dirname, 'build'));
+//app.set('view engine', 'jade');
 
 
 app.use(logger('dev'));
@@ -27,7 +27,7 @@ app.use(session({
   secret: '4secret',
   resave: false
 }))
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

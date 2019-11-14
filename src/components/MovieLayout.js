@@ -5,18 +5,21 @@ import { MDBCol, MDBRow } from "mdbreact";
 import { connect } from "react-redux";
 import {voting} from '../Redux/actions'
 
-const MovieLayout = ({ urlReducer, filters, cookies, votes }) => {
+const MovieLayout = ({ urlReducer, filters, cookies, votes, voting }) => {
   const { language } = urlReducer;
   const { sort, searchWord, roles } = filters;
   const [championList, setChampionList] = useState([]);
   const [counters, setCounters] = useState([]);
   useEffect(() => {
+    if(votes || votes === 0) {
+      voting(votes);
+    }
     const fetchData = async () => {
-      await axios('http://localhost:9000/counters').then(({data}) => {
+      await axios('/counters').then(({data}) => {
         setCounters(data);
       })
       await axios(
-        `http://ddragon.leagueoflegends.com/cdn/9.22.1/data/${language}/champion.json`
+        `https://ddragon.leagueoflegends.com/cdn/9.22.1/data/${language}/champion.json`
       )
         .then(({ data }) => {
           data = data.data;
@@ -34,7 +37,10 @@ const MovieLayout = ({ urlReducer, filters, cookies, votes }) => {
         }) 
       };
     fetchData();
-  }, [language, sort]);
+    if(votes) {
+      voting(votes);
+    }
+  }, [language, sort, votes]);
   const filterCheck = () => {
     let data = championList;
     if (roles.length !== 0) {
@@ -93,4 +99,4 @@ const mapStateToProps = ({ urlReducer, filters }) => ({
 const mapDispatchToProps = {
   voting
 }
-export default connect(mapStateToProps)(MovieLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(MovieLayout);

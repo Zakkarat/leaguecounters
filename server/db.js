@@ -6,8 +6,7 @@ const DB = new sqlite3.Database(DB_PATH);
 
 DB.serialize(() => {
     DB.run("CREATE TABLE IF NOT EXISTS counters (key INT PRIMARY KEY UNIQUE, counter INT)");
-    DB.run("CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY, votes INT)");
-    console.log("created")
+    DB.run("CREATE TABLE IF NOT EXISTS sess (token TEXT PRIMARY KEY, votes INT)");
 })
 
 module.exports = DB;
